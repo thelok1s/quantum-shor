@@ -3,7 +3,11 @@ import StartScreen from "@/components/screen/StartScreen";
 import AboutModal from "@/components/ui/AboutModal";
 import AppLogo from "@/components/ui/AppLogo";
 import { ThemeContext } from "@/lib/ThemeContext";
-import { IconMoonFilled, IconSunHigh } from "@tabler/icons-react";
+import {
+  IconBrandGithub,
+  IconMoonFilled,
+  IconSunHigh,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 const getInitialTheme = () => {
@@ -46,18 +50,25 @@ export default function App() {
           <nav className="flex gap-2 items-center">
             {screen === "algorithm" && (
               <button
-                className="bg-gray-100 dark:bg-[#1a1c24] text-gray-700 dark:text-[#c8ccd8] border border-gray-200 dark:border-[#2a2d3a] rounded-md px-3 py-1.5 text-[0.82rem] hover:bg-gray-200 dark:hover:bg-[#2a2d3a] transition-colors"
+                className="bg-gray-100 h-8 dark:bg-[#1a1c24] text-gray-700 dark:text-[#c8ccd8] border border-gray-200 dark:border-[#2a2d3a] rounded-md px-3  text-[0.82rem] hover:bg-gray-200 dark:hover:bg-[#2a2d3a] transition-colors"
                 onClick={handleReset}
               >
                 ← Новое число
               </button>
             )}
             <button
-              className=" bg-gray-100 dark:bg-[#1a1c24] text-gray-700 dark:text-[#c8ccd8] border border-gray-200 dark:border-[#2a2d3a] rounded-md px-3 py-1.5 text-[0.82rem] hover:bg-gray-200 dark:hover:bg-[#2a2d3a] transition-colors"
+              className=" bg-gray-100 h-8 dark:bg-[#1a1c24] text-gray-700 dark:text-[#c8ccd8] border border-gray-200 dark:border-[#2a2d3a] rounded-md px-3  text-[0.82rem] hover:bg-gray-200 dark:hover:bg-[#2a2d3a] transition-colors"
               onClick={() => setShowAbout(true)}
             >
               Об алгоритме
             </button>
+            <a
+              title="source code"
+              href="https://github.com/thelok1s/quantum-shor"
+              className=" bg-gray-100 dark:bg-[#1a1c24] text-gray-700 dark:text-[#c8ccd8] border border-gray-200 dark:border-[#2a2d3a] rounded-md w-8 h-8 flex items-center justify-center text-base hover:bg-gray-200 dark:hover:bg-[#2a2d3a] transition-colors"
+            >
+              <IconBrandGithub size={20} />
+            </a>
             <button
               title={isDark ? "Светлая тема" : "Тёмная тема"}
               onClick={() => setIsDark((d) => !d)}
