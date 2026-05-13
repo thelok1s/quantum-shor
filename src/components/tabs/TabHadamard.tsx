@@ -1,19 +1,22 @@
-import { Complex } from "@/lib/quantum/baseMath";
-import { StageMap } from "@/types";
 import QuantumStateViz from "@/components/QuantStateVizualizer";
-import CircuitStep from "@/components/layout/CircuitStep";
-import Formula from "@/components/layout/Formula";
 import InfoBox from "@/components/layout/InfoBox";
 import RegPanels from "@/components/layout/RegPanels";
 import SectionHeader from "@/components/layout/SectionHeader";
-import Skeleton from "@/components/ui/Skeleton";
 import TwoCol from "@/components/layout/TwoCol";
+import CircuitStep from "@/components/layout/katex/CircuitStep";
+import Formula from "@/components/layout/katex/Formula";
+import IK from "@/components/layout/katex/IK";
+import Skeleton from "@/components/ui/Skeleton";
+import { Complex } from "@/lib/quantum/baseMath";
+import { StageMap } from "@/types";
 
 export default function TabHadamard({ state }: { state: StageMap }) {
   const d = state.hadamard ?? {};
   return (
     <div>
-      <SectionHeader title="Применение преобразования Адамара к |x⟩" />
+      <SectionHeader>
+        Применение преобразования Адамара к <IK math="|x\rangle" />
+      </SectionHeader>
       <TwoCol>
         <div>
           <InfoBox>
@@ -23,10 +26,7 @@ export default function TabHadamard({ state }: { state: StageMap }) {
               суперпозицию всех N состояний от |0⟩ до |N−1⟩.
             </p>
           </InfoBox>
-          <Formula>
-            H⊗ⁿ|0⟩ = <sup>1</sup>/<sub>√N</sub> ∑<sub>x=0</sub>
-            <sup>N−1</sup> |x⟩
-          </Formula>
+          <Formula math="H^{\otimes n}|0\rangle = \dfrac{1}{\sqrt{N}} \sum_{x=0}^{N-1} |x\rangle" />
           <InfoBox>
             <p>
               На графике ниже видно, что все N состояний регистра |x⟩ имеют
@@ -42,7 +42,6 @@ export default function TabHadamard({ state }: { state: StageMap }) {
           <QuantumStateViz
             amps={d.xAmps as Complex[]}
             label="Регистр |x⟩ после H⊗ⁿ"
-            height={110}
           />
         ) : (
           <Skeleton />
@@ -51,7 +50,6 @@ export default function TabHadamard({ state }: { state: StageMap }) {
           <QuantumStateViz
             amps={d.yAmps as Complex[]}
             label="Регистр |y⟩ (без изменений)"
-            height={90}
           />
         ) : (
           <Skeleton />

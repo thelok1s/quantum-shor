@@ -1,12 +1,13 @@
+import QuantumStateViz from "@/components/QuantStateVizualizer";
+import InfoBox from "@/components/layout/InfoBox";
+import RegPanels from "@/components/layout/RegPanels";
+import SectionHeader from "@/components/layout/SectionHeader";
+import TwoCol from "@/components/layout/TwoCol";
+import CircuitStep from "@/components/layout/katex/CircuitStep";
+import Formula from "@/components/layout/katex/Formula";
+import IK from "@/components/layout/katex/IK";
+import Skeleton from "@/components/ui/Skeleton";
 import { Complex } from "@/lib/quantum/baseMath";
-import QuantumStateViz from "../QuantStateVizualizer";
-import CircuitStep from "../layout/CircuitStep";
-import Formula from "../layout/Formula";
-import InfoBox from "../layout/InfoBox";
-import RegPanels from "../layout/RegPanels";
-import SectionHeader from "../layout/SectionHeader";
-import Skeleton from "../ui/Skeleton";
-import TwoCol from "../layout/TwoCol";
 import { StageMap } from "@/types";
 
 export default function TabUf({ state, M }: { state: StageMap; M: number }) {
@@ -14,29 +15,25 @@ export default function TabUf({ state, M }: { state: StageMap; M: number }) {
   const prep = state.prepare ?? {};
   return (
     <div>
-      <SectionHeader title="Применение оракула U_f: вычисление a^x mod M" />
+      <SectionHeader>
+        Применение оракула <IK math="U_f" />: вычисление{" "}
+        <IK math="a^x \bmod M" />
+      </SectionHeader>
       <TwoCol>
         <div>
           <InfoBox>
             <p>
-              Квантовый оракул U<sub>f</sub> вычисляет значения функции a
-              <sup>x</sup> mod M для всех аргументов x первого регистра
+              Квантовый оракул <IK math="U_f" /> вычисляет значения функции{" "}
+              <IK math="a^x \bmod M" /> для всех аргументов x первого регистра
               одновременно. Результаты записываются во второй регистр.
             </p>
           </InfoBox>
-          <Formula>
-            U<sub>f</sub>|x⟩|0⟩ = |x⟩|a<sup>x</sup> mod M⟩
-          </Formula>
-          <Formula>
-            <sup>1</sup>/<sub>√N</sub> ∑<sub>x=0</sub>
-            <sup>N−1</sup> |x⟩|0⟩ → <sup>1</sup>/<sub>√N</sub> ∑<sub>x=0</sub>
-            <sup>N−1</sup> |x⟩|a<sup>x</sup> mod M⟩
-          </Formula>
+          <Formula math="U_f|x\rangle|0\rangle = |x\rangle|a^x \bmod M\rangle" />
+          <Formula math="\dfrac{1}{\sqrt{N}} \sum_{x=0}^{N-1} |x\rangle|0\rangle \;\rightarrow\; \dfrac{1}{\sqrt{N}} \sum_{x=0}^{N-1} |x\rangle|a^x \bmod M\rangle" />
           {prep.a && (
             <div className="bg-gray-100 dark:bg-[#1a1c24] border border-gray-200 dark:border-[#2a2d3a] rounded-lg p-3 mt-2">
               <div className="text-[0.78rem] text-gray-400 dark:text-[#7a7f94] mb-2">
-                Первые значения f(x) = {prep.a}
-                <sup>x</sup> mod {M}:
+                Первые значения <IK math={`f(x) = ${prep.a}^x \\bmod ${M}`} />:
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {Array.from(
@@ -66,11 +63,7 @@ export default function TabUf({ state, M }: { state: StageMap; M: number }) {
       </TwoCol>
       <RegPanels>
         {d.xAmps ? (
-          <QuantumStateViz
-            amps={d.xAmps as Complex[]}
-            label="Регистр |x⟩"
-            height={110}
-          />
+          <QuantumStateViz amps={d.xAmps as Complex[]} label="Регистр |x⟩" />
         ) : (
           <Skeleton />
         )}
@@ -78,7 +71,6 @@ export default function TabUf({ state, M }: { state: StageMap; M: number }) {
           <QuantumStateViz
             amps={d.yAmps as Complex[]}
             label="Регистр |y⟩ = a^x mod M"
-            height={90}
           />
         ) : (
           <Skeleton />

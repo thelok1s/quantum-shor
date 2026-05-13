@@ -1,19 +1,22 @@
+import QuantumStateViz from "@/components/QuantStateVizualizer";
+import InfoBox from "@/components/layout/InfoBox";
+import RegPanels from "@/components/layout/RegPanels";
+import SectionHeader from "@/components/layout/SectionHeader";
+import TwoCol from "@/components/layout/TwoCol";
+import CircuitStep from "@/components/layout/katex/CircuitStep";
+import Formula from "@/components/layout/katex/Formula";
+import IK from "@/components/layout/katex/IK";
+import Skeleton from "@/components/ui/Skeleton";
 import { Complex } from "@/lib/quantum/baseMath";
 import { StageMap } from "@/types";
-import QuantumStateViz from "../QuantStateVizualizer";
-import CircuitStep from "../layout/CircuitStep";
-import Formula from "../layout/Formula";
-import InfoBox from "../layout/InfoBox";
-import RegPanels from "../layout/RegPanels";
-import SectionHeader from "../layout/SectionHeader";
-import Skeleton from "../ui/Skeleton";
-import TwoCol from "../layout/TwoCol";
 
 export default function TabMeasureX({ state }: { state: StageMap }) {
   const d = state.measureX ?? {};
   return (
     <div>
-      <SectionHeader title="Измерение состояния регистра |x⟩" />
+      <SectionHeader>
+        Измерение состояния регистра <IK math="|x\rangle" />
+      </SectionHeader>
       <TwoCol>
         <div>
           <InfoBox>
@@ -23,11 +26,8 @@ export default function TabMeasureX({ state }: { state: StageMap }) {
               методом непрерывной дроби.
             </p>
           </InfoBox>
-          <Formula>m ≈ k · (N/r), &nbsp; k ∈ ℤ</Formula>
-          <Formula>
-            A(m) = <sup>1</sup>/<sub>N</sub> · <sup>sin(πmr/N · K)</sup>/
-            <sub>sin(πmr/N)</sub>
-          </Formula>
+          <Formula math="m \approx k \cdot \dfrac{N}{r}, \quad k \in \mathbb{Z}" />
+          <Formula math="A(m) = \dfrac{1}{N} \cdot \dfrac{\sin\!\left(\dfrac{\pi m r K}{N}\right)}{\sin\!\left(\dfrac{\pi m r}{N}\right)}" />
           {d.m !== undefined && (
             <div className="bg-amber-50 dark:bg-[rgba(245,158,11,0.08)] border border-amber-200 dark:border-[rgba(245,158,11,0.2)] rounded-lg px-4 py-2.5 text-[0.9rem] text-amber-700 dark:text-amber-400 mt-2">
               Измерено m = <strong>{d.m as number}</strong>
@@ -41,17 +41,12 @@ export default function TabMeasureX({ state }: { state: StageMap }) {
           <QuantumStateViz
             amps={d.xAmps as Complex[]}
             label="Регистр |x⟩ после измерения"
-            height={110}
           />
         ) : (
           <Skeleton />
         )}
         {d.yAmps ? (
-          <QuantumStateViz
-            amps={d.yAmps as Complex[]}
-            label="Регистр |y⟩"
-            height={90}
-          />
+          <QuantumStateViz amps={d.yAmps as Complex[]} label="Регистр |y⟩" />
         ) : (
           <Skeleton />
         )}

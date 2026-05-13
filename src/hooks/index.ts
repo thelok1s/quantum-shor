@@ -1,0 +1,1 @@
+export { useEasterEgg, EASTER_EGG_ENABLED, STREAK_TEXT_THRESHOLD, STREAK_SOUND_THRESHOLD } from "./useEasterEgg";

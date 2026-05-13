@@ -1,33 +1,34 @@
+import QuantumStateViz from "@/components/QuantStateVizualizer";
+import InfoBox from "@/components/layout/InfoBox";
+import RegPanels from "@/components/layout/RegPanels";
+import SectionHeader from "@/components/layout/SectionHeader";
+import TwoCol from "@/components/layout/TwoCol";
+import CircuitStep from "@/components/layout/katex/CircuitStep";
+import Formula from "@/components/layout/katex/Formula";
+import IK from "@/components/layout/katex/IK";
+import Skeleton from "@/components/ui/Skeleton";
 import { Complex } from "@/lib/quantum/baseMath";
 import { StageMap } from "@/types";
-import QuantumStateViz from "../QuantStateVizualizer";
-import CircuitStep from "../layout/CircuitStep";
-import Formula from "../layout/Formula";
-import InfoBox from "../layout/InfoBox";
-import RegPanels from "../layout/RegPanels";
-import SectionHeader from "../layout/SectionHeader";
-import Skeleton from "../ui/Skeleton";
-import TwoCol from "../layout/TwoCol";
 
 export default function TabMeasureY({ state }: { state: StageMap }) {
   const d = state.measureY ?? {};
   return (
     <div>
-      <SectionHeader title="Измерение состояния регистра |y⟩" />
+      <SectionHeader>
+        Измерение состояния регистра <IK math="|y\rangle" />
+      </SectionHeader>
       <TwoCol>
         <div>
           <InfoBox>
             <p>
-              При измерении регистра |y⟩ фиксируется одно конкретное значение y₀
-              = a<sup>x₀</sup> mod M. После этого регистр |x⟩ коллапсирует в
-              суперпозицию только тех состояний |x⟩, для которых a<sup>x</sup>{" "}
-              mod M = y₀.
+              При измерении регистра <IK math="|y\rangle" /> фиксируется одно
+              конкретное значение <IK math="y_0 = a^{x_0} \bmod M" />. После
+              этого регистр <IK math="|x\rangle" /> коллапсирует в суперпозицию
+              только тех состояний <IK math="|x\rangle" />, для которых{" "}
+              <IK math="a^x \bmod M = y_0" />.
             </p>
           </InfoBox>
-          <Formula>
-            |ψ⟩ = <sup>1</sup>/<sub>√K</sub> ∑<sub>j=0</sub>
-            <sup>K−1</sup> |x₀ + jr⟩
-          </Formula>
+          <Formula math="|\psi\rangle = \dfrac{1}{\sqrt{K}} \sum_{j=0}^{K-1} |x_0 + jr\rangle" />
           <InfoBox>
             <p>
               Второй регистр служит для приготовления периодического состояния в
@@ -47,7 +48,6 @@ export default function TabMeasureY({ state }: { state: StageMap }) {
           <QuantumStateViz
             amps={d.xAmps as Complex[]}
             label="Регистр |x⟩ (периодическое состояние)"
-            height={110}
           />
         ) : (
           <Skeleton />
@@ -56,7 +56,6 @@ export default function TabMeasureY({ state }: { state: StageMap }) {
           <QuantumStateViz
             amps={d.yAmps as Complex[]}
             label="Регистр |y⟩ (коллапсировал)"
-            height={90}
           />
         ) : (
           <Skeleton />

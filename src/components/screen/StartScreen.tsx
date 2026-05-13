@@ -1,5 +1,5 @@
-import { useState } from "react";
 import AppLogo from "@/components/ui/AppLogo";
+import { validateInput } from "@/lib/quantum/main";
 import {
   IconAlertTriangle,
   IconAtom,
@@ -8,7 +8,7 @@ import {
   IconMatrix,
   IconWaveSine,
 } from "@tabler/icons-react";
-import { validateInput } from "@/lib/quantum/main";
+import { useState } from "react";
 
 export default function StartScreen({
   onFactorize,
@@ -43,15 +43,15 @@ export default function StartScreen({
     <div className="flex-1 flex flex-col items-center justify-center p-8 gap-8 relative overflow-hidden">
       {/* Glow — dark only */}
       <div
-        className="hidden dark:block absolute -top-[20%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none"
+        className="hidden dark:block absolute top-[10%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(0,179,161,0.12) 0%, transparent 70%)",
         }}
       />
 
       {/* Main card */}
-      <div className="bg-white dark:bg-[#111318] border border-gray-200 dark:border-[#2a2d3a] rounded-2xl p-10 max-w-[580px] w-full text-center shadow-sm">
+      <div className="bg-white dark:bg-[#111318] border border-gray-200 dark:border-[#2a2d3a] rounded-2xl p-10  max-w-[700px] w-full text-center shadow-sm">
         <AppLogo size={40} className="mb-4 mx-auto" />
         <h1 className="text-[1.75rem] font-semibold text-gray-900 dark:text-[#e8eaf0] mb-3 tracking-tight leading-tight">
           Симулятор квантового
@@ -64,9 +64,9 @@ export default function StartScreen({
         </p>
 
         {/* Info box */}
-        <div className="bg-indigo-50 dark:bg-[rgba(99,102,241,0.07)] border border-indigo-200 dark:border-[rgba(99,102,241,0.2)] rounded-xl p-4 text-left mb-6 text-[0.875rem] leading-7">
+        <div className="bg-accent-50 dark:bg-[rgba(0,179,161,0.07)] border border-accent-200 dark:border-[rgba(0,179,161,0.2)] rounded-xl p-4 text-left mb-6 text-[0.875rem] leading-7">
           <div className="flex gap-4 items-start">
-            <IconInfoSquareRounded className="text-indigo-500 my-auto" />
+            <IconInfoSquareRounded className="text-accent-500 my-auto" />
             <div className="text-gray-700 dark:text-[#c8ccd8]">
               <strong>Инструкция:</strong> введите натуральное двузначное число,
               <br />
@@ -89,8 +89,11 @@ export default function StartScreen({
         </div>
 
         {/* Form */}
-        <form className="text-left mb-5" onSubmit={handleSubmit}>
-          <label className="block text-gray-400 dark:text-[#7a7f94] text-[0.8rem] uppercase tracking-wide mb-2">
+        <form
+          className="flex flex-col text-left mb-5 gap-1"
+          onSubmit={handleSubmit}
+        >
+          <label className="block text-gray-400 dark:text-[#7a7f94] text-[0.8rem] uppercase tracking-wide">
             Хочу узнать разложение числа
           </label>
           <div className="flex gap-2">
@@ -98,14 +101,14 @@ export default function StartScreen({
               type="number"
               min="10"
               max="99"
-              className="flex-1 text-[1.1rem] px-3.5 py-2.5 bg-gray-100 dark:bg-[#1a1c24] border border-gray-200 dark:border-[#2a2d3a] rounded-lg text-gray-900 dark:text-[#e8eaf0] outline-none focus:border-indigo-500 transition-colors min-w-0"
-              placeholder="напр. 15"
+              className="flex-1 text-[1.1rem] px-3.5 py-2.5 bg-gray-100 dark:bg-[#1a1c24] border border-gray-200 dark:border-[#2a2d3a] rounded-lg text-gray-900 dark:text-[#e8eaf0] outline-none focus:border-accent-500 transition-colors min-w-0"
+              placeholder="ваше число.."
               value={value}
               onChange={handleChange}
             />
             <button
               type="submit"
-              className="bg-indigo-500 hover:bg-violet-500 text-white font-semibold px-5 py-2.5 rounded-lg text-[0.9rem] whitespace-nowrap transition-colors"
+              className="bg-accent-500 hover:bg-accent-600 text-white font-semibold px-5 py-2.5 rounded-lg text-[0.9rem] whitespace-nowrap transition-colors"
             >
               Факторизовать!
             </button>
@@ -119,7 +122,6 @@ export default function StartScreen({
           )}
         </form>
 
-        {/* Examples */}
         <div className="flex items-center gap-3 flex-wrap justify-center">
           <span className="text-gray-400 dark:text-[#7a7f94] text-[0.8rem]">
             Примеры:
@@ -129,7 +131,7 @@ export default function StartScreen({
               <button
                 key={n}
                 type="button"
-                className="bg-gray-100 dark:bg-[#1a1c24] border border-gray-200 dark:border-[#2a2d3a] text-gray-700 dark:text-[#c8ccd8] rounded-full px-2.5 py-0.5 text-[0.8rem] hover:bg-indigo-50 dark:hover:bg-[rgba(99,102,241,0.15)] hover:border-indigo-300 dark:hover:border-indigo-500 transition-all"
+                className="bg-gray-100 dark:bg-[#1a1c24] border border-gray-200 dark:border-[#2a2d3a] text-gray-700 dark:text-[#c8ccd8] rounded-full px-2.5 py-0.5 text-[0.8rem] hover:bg-accent-50 dark:hover:bg-[rgba(0,179,161,0.15)] hover:border-accent-300 dark:hover:border-accent-500 transition-all"
                 onClick={() => handleExample(n)}
               >
                 {n}
@@ -139,7 +141,6 @@ export default function StartScreen({
         </div>
       </div>
 
-      {/* Feature cards */}
       <div className="grid grid-cols-4 gap-4 max-w-[700px] w-full max-[700px]:grid-cols-2">
         {[
           {

@@ -1,7 +1,5 @@
 // Continued fractions
 
-import { gcd, modPow } from "./baseMath";
-
 interface ContinuedFractionResult {
   coeffs: number[];
   numerators: number[];
@@ -13,6 +11,8 @@ interface FactorResult {
   q: number;
   r: number;
   m?: number;
+  failed?: boolean;
+  oddR?: number;
 }
 
 function continuedFraction(num: number, den: number): ContinuedFractionResult {
@@ -45,24 +45,39 @@ function continuedFraction(num: number, den: number): ContinuedFractionResult {
   return { coeffs, numerators: As, denominators: Bs };
 }
 
+function modPowBig(base: bigint, exp: bigint, mod: bigint): bigint {
+  let result = 1n;
+  base = base % mod;
+  while (exp > 0n) {
+    if (exp % 2n === 1n) result = (result * base) % mod;
+    exp = exp >> 1n;
+    base = (base * base) % mod;
+  }
+  return result;
+}
+
+function gcdBig(a: bigint, b: bigint): bigint {
+  while (b !== 0n) {
+    [a, b] = [b, a % b];
+  }
+  return a;
+}
+
 function tryFactorize(r: number, a: number, M: number): FactorResult | null {
   if (r % 2 !== 0) return null;
-  const k = r / 2;
-  const ak = modPow(a, k, M);
-  const p = gcd(ak + 1, M);
-  const q = gcd(ak - 1 > 0 ? ak - 1 : M - 1, M);
+  const k = BigInt(r / 2);
+  const aBig = BigInt(a);
+  const MBig = BigInt(M);
+  const ak = modPowBig(aBig, k, MBig);
+  const pBig = gcdBig(ak + 1n, MBig);
+  const qBig = gcdBig(ak > 0n ? ak - 1n : MBig - 1n, MBig);
+  const p = Number(pBig);
+  const q = Number(qBig);
   if (p === 1 || q === 1 || p === M || q === M) return null;
   if (p * q === M) return { p, q, r };
   return null;
 }
 
-function bruteFactorize(M: number): { p: number; q: number } {
-  for (let p = 2; p <= Math.sqrt(M); p++) {
-    if (M % p === 0) return { p, q: M / p };
-  }
-  return { p: 1, q: M };
-}
-
 export default continuedFraction;
-export { tryFactorize, bruteFactorize };
+export { tryFactorize };
 export type { ContinuedFractionResult, FactorResult };

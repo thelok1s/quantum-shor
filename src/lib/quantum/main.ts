@@ -3,7 +3,6 @@ import { Complex, findA, getNumQb, isPrime, isPrimePower } from "./baseMath";
 import { add } from "./complexNumbers";
 import continuedFraction, {
   tryFactorize,
-  bruteFactorize,
   FactorResult,
 } from "./contiunedFractions";
 import {
@@ -88,6 +87,7 @@ function runShor(M: number, onProgress: (p: ShorProgress) => void): void {
 
   let m = 0;
   let factorResult: FactorResult | null = null;
+  let bestOddR: number | null = null;
   const maxTries = 20;
 
   for (let t = 0; t < maxTries && !factorResult; t++) {
@@ -96,17 +96,14 @@ function runShor(M: number, onProgress: (p: ShorProgress) => void): void {
     const { denominators } = continuedFraction(m, N);
     for (const r of denominators) {
       if (r > 0 && r < M) {
+        if (r % 2 !== 0) {
+          if (bestOddR === null) bestOddR = r;
+          continue;
+        }
         const res = tryFactorize(r, a, M);
         if (res) {
           factorResult = { ...res, m };
           break;
-        }
-        if (r % 2 !== 0) {
-          const res2 = tryFactorize(2 * r, a, M);
-          if (res2) {
-            factorResult = { ...res2, m };
-            break;
-          }
         }
       }
     }
@@ -118,8 +115,14 @@ function runShor(M: number, onProgress: (p: ShorProgress) => void): void {
   onProgress({ stage: "measureX", xAmps: xMX, yAmps: yAfterMY, m });
 
   if (!factorResult) {
-    const { p, q } = bruteFactorize(M);
-    factorResult = { p, q, r: -1, m };
+    factorResult = {
+      p: 0,
+      q: 0,
+      r: bestOddR ?? -1,
+      m,
+      failed: true,
+      oddR: bestOddR ?? undefined,
+    };
   }
 
   const { coeffs, numerators, denominators } = continuedFraction(m, N);

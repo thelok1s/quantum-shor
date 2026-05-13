@@ -1,7 +1,3 @@
-import { useState, useEffect, useRef } from "react";
-import { FactorResult } from "@/lib/quantum/contiunedFractions";
-import runShor from "@/lib/quantum/main";
-import { StageMap } from "@/types";
 import {
   TabHadamard,
   TabInit,
@@ -11,7 +7,12 @@ import {
   TabPost,
   TabQFT,
   TabUf,
-} from "../tabs";
+} from "@/components/tabs";
+import { EASTER_EGG_ENABLED, useEasterEgg } from "@/hooks/useEasterEgg";
+import { FactorResult } from "@/lib/quantum/contiunedFractions";
+import runShor from "@/lib/quantum/main";
+import { StageMap } from "@/types";
+import { useEffect, useRef, useState } from "react";
 
 interface AlgorithmWindowProps {
   M: number;
@@ -24,6 +25,8 @@ export default function AlgorithmWindow({ M, onReset }: AlgorithmWindowProps) {
   const [running, setRunning] = useState(true);
   const [steps, setSteps] = useState<string[]>([]);
   const stepsRef = useRef<string[]>([]);
+
+  const easterEgg = useEasterEgg();
 
   function run() {
     setRunning(true);
@@ -42,10 +45,17 @@ export default function AlgorithmWindow({ M, onReset }: AlgorithmWindowProps) {
           setState((s) => ({ ...s, ...collected }));
         });
         setState((s) => ({ ...s, ...collected, done: { stage: "done" } }));
-      } catch (e: any) {
+
+        const failed = !!(collected.postprocess?.result as FactorResult | null)
+          ?.failed;
+        easterEgg.handleFailure(failed);
+      } catch (e: unknown) {
         setState((s) => ({
           ...s,
-          error: { stage: "error", message: e.message },
+          error: {
+            stage: "error",
+            message: e instanceof Error ? e.message : String(e),
+          },
         }));
       }
       setRunning(false);
@@ -67,7 +77,7 @@ export default function AlgorithmWindow({ M, onReset }: AlgorithmWindowProps) {
           <div className="text-[0.7rem] text-gray-400 dark:text-[#7a7f94] uppercase tracking-wide mt-2">
             Модуль
           </div>
-          <div className="text-[1.8rem] text-indigo-500 font-bold tracking-tighter leading-tight">
+          <div className="text-[1.8rem] text-accent-500 dark:text-accent-400 font-bold tracking-tighter leading-tight">
             {M}
           </div>
 
@@ -123,7 +133,7 @@ export default function AlgorithmWindow({ M, onReset }: AlgorithmWindowProps) {
           )}
         </div>
 
-        {result && (
+        {result && !result.failed && result.r > 0 && (
           <div className="bg-emerald-50 dark:bg-[rgba(16,185,129,0.08)] border border-emerald-200 dark:border-[rgba(16,185,129,0.25)] rounded-xl p-3 text-center">
             <div className="text-[1.1rem] font-bold text-gray-900 dark:text-[#e8eaf0] tracking-tight">
               {M} ={" "}
@@ -140,17 +150,38 @@ export default function AlgorithmWindow({ M, onReset }: AlgorithmWindowProps) {
             </div>
           </div>
         )}
+        {result && result.failed && (
+          <div className="bg-amber-50 dark:bg-[rgba(245,158,11,0.08)] border border-amber-200 dark:border-[rgba(245,158,11,0.25)] rounded-xl p-3 text-center">
+            <div className="text-[0.9rem] font-bold text-amber-700 dark:text-amber-400">
+              ✗ Нечётный период
+            </div>
+            {result.oddR !== undefined && (
+              <div className="text-[0.82rem] text-amber-600 dark:text-amber-500 mt-0.5 font-mono">
+                r = {result.oddR}
+              </div>
+            )}
+            <div className="text-[0.72rem] text-amber-500 dark:text-amber-600 mt-1">
+              Запустите снова
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col gap-1">
           <div className="text-[0.7rem] text-gray-400 dark:text-[#7a7f94] uppercase tracking-wide mb-1">
             Этапы выполнения
           </div>
-          {Object.entries(STAGE_LABELS).map(([s, label]) => {
+          {Object.entries(STAGE_LABELS).map(([s, label], index) => {
             const done = steps.includes(s);
             return (
               <div
                 key={s}
                 className={`flex items-start gap-1.5 text-[0.75rem] leading-snug py-0.5 ${done ? "text-emerald-600 dark:text-emerald-400" : "text-gray-400 dark:text-[#7a7f94]"}`}
+                style={{
+                  animation: done
+                    ? `fadeInProgressItem 250ms ease-out forwards`
+                    : undefined,
+                  animationDelay: done ? `${index * 50}ms` : undefined,
+                }}
               >
                 <span className="shrink-0 text-[0.7rem] mt-0.5">
                   {done ? "✓" : "○"}
@@ -162,13 +193,28 @@ export default function AlgorithmWindow({ M, onReset }: AlgorithmWindowProps) {
         </div>
 
         <div className="flex flex-col gap-1.5 mt-auto">
-          <button
-            className="bg-indigo-500 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-[0.78rem] px-3 py-2 rounded-lg transition-colors overflow-hidden text-ellipsis whitespace-nowrap"
-            onClick={() => run()}
-            disabled={running}
-          >
-            {running ? "Выполняется..." : "Запустить снова (новое a)"}
-          </button>
+          {/* Easter egg: floating fail-streak label above the button */}
+          <div className="relative">
+            {EASTER_EGG_ENABLED && easterEgg.burstKey > 0 && (
+              <span
+                key={easterEgg.burstKey}
+                className="absolute bottom-full left-0 right-0 text-center font-semibold text-red-400 dark:text-red-400 pointer-events-none select-none pb-0.5"
+                style={{
+                  animation: "floatFail 1.6s ease-out forwards",
+                  fontSize: `${16 + Math.log(easterEgg.burstStreakValue + 1) * 10}px`,
+                }}
+              >
+                x{easterEgg.burstStreakValue} неудача!
+              </span>
+            )}
+            <button
+              className="w-full bg-accent-500 hover:bg-accent-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-[0.78rem] px-3 py-2 rounded-lg transition-colors overflow-hidden text-ellipsis whitespace-nowrap"
+              onClick={() => run()}
+              disabled={running}
+            >
+              {running ? "Выполняется..." : "Запустить снова (новое a)"}
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -182,7 +228,7 @@ export default function AlgorithmWindow({ M, onReset }: AlgorithmWindowProps) {
               onClick={() => setActiveTab(t.id)}
               className={`shrink-0 rounded-none px-4 py-2.5 text-[0.8rem] font-medium border-b-2 whitespace-nowrap transition-colors ${
                 activeTab === t.id
-                  ? "text-indigo-500 border-b-indigo-500 bg-transparent"
+                  ? "text-accent-500 border-b-accent-500 bg-transparent dark:text-accent-400 dark:border-b-accent-400"
                   : "text-gray-400 dark:text-[#7a7f94] border-b-transparent hover:text-gray-700 dark:hover:text-[#c8ccd8] hover:bg-black/[0.02]"
               }`}
             >

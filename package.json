@@ -12,9 +12,12 @@
   "dependencies": {
     "@tabler/icons-react": "^3.44.0",
     "@tailwindcss/vite": "^4.3.0",
+    "katex": "^0.16.46",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "tailwindcss": "^4.3.0"
+    "react-katex": "^3.1.0",
+    "tailwindcss": "^4.3.0",
+    "use-sound": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^25.7.0",

@@ -3,10 +3,16 @@ export default function AboutModal({ onClose }: { onClose: () => void }) {
     <div
       className="fixed inset-0 bg-black/60 dark:bg-black/70 flex items-center justify-center z-[1000] p-4 backdrop-blur-sm"
       onClick={onClose}
+      style={{
+        animation: "fadeInModal 300ms ease-out forwards",
+      }}
     >
       <div
         className="bg-white dark:bg-[#111318] border border-gray-200 dark:border-[#2a2d3a] rounded-2xl w-full max-w-[700px] max-h-[85vh] flex flex-col overflow-hidden shadow-xl"
         onClick={(e) => e.stopPropagation()}
+        style={{
+          animation: "slideInModal 300ms ease-out forwards",
+        }}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-[#2a2d3a] shrink-0">
           <h2 className="text-[1.05rem] font-semibold text-gray-900 dark:text-[#e8eaf0] m-0">
@@ -63,7 +69,7 @@ export default function AboutModal({ onClose }: { onClose: () => void }) {
             кольце Z<sub>M</sub>: a<sup>r</sup> = 1 (mod M).
           </p>
 
-          <h3 className="text-[0.95rem] font-semibold text-indigo-500 mt-2">
+          <h3 className="text-[0.95rem] font-semibold text-accent-500 dark:text-accent-400 mt-2">
             Пример факторизации M = 21
           </h3>
           <p>
@@ -136,7 +142,7 @@ export default function AboutModal({ onClose }: { onClose: () => void }) {
           </ul>
           <p>Проверяем: 3 × 7 = 21 = M ✓</p>
 
-          <h3 className="text-[0.95rem] font-semibold text-indigo-500 mt-2">
+          <h3 className="text-[0.95rem] font-semibold text-accent-500 dark:text-accent-400 mt-2">
             Квантовое ускорение
           </h3>
           <p>

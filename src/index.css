@@ -1,6 +1,20 @@
 @import "tailwindcss";
 @variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-accent: #00b3a1;
+  --color-accent-50: #f0fdfb;
+  --color-accent-100: #ccf7f2;
+  --color-accent-200: #99efe5;
+  --color-accent-300: #66e7d8;
+  --color-accent-400: #33dfcb;
+  --color-accent-500: #00b3a1;
+  --color-accent-600: #009285;
+  --color-accent-700: #007169;
+  --color-accent-800: #00544d;
+  --color-accent-900: #003731;
+}
+
 :root {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 15px;
@@ -12,8 +26,8 @@
   --canvas-empty: #e2e8f0;
   --wire-color: #cbd5e1;
   --gate-fill: #ffffff;
-  --gate-stroke: #6366f1;
-  --gate-text: #4f46e5;
+  --gate-stroke: #00b3a1;
+  --gate-text: #00b3a1;
   --reg-text: #94a3b8;
 }
 
@@ -22,8 +36,8 @@
   --canvas-empty: #1a1c24;
   --wire-color: #2a2d3a;
   --gate-fill: #1a1c24;
-  --gate-stroke: #6366f1;
-  --gate-text: #8b8ff8;
+  --gate-stroke: #00b3a1;
+  --gate-text: #33dfcb;
   --reg-text: #7a7f94;
 }
 
@@ -75,4 +89,68 @@
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+@keyframes floatFail {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-38px) scale(0.9);
+  }
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInModal {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOutModal {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutModal {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes fadeInProgressItem {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
