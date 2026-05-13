@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+
+  /* SVG / canvas theme tokens */
+  --canvas-bg: 000;
+  --canvas-empty: #e2e8f0;
+  --wire-color: #cbd5e1;
+  --gate-fill: #ffffff;
+  --gate-stroke: #6366f1;
+  --gate-text: #4f46e5;
+  --reg-text: #94a3b8;
+}
+
+.dark {
+  --canvas-bg: #111318;
+  --canvas-empty: #1a1c24;
+  --wire-color: #2a2d3a;
+  --gate-fill: #1a1c24;
+  --gate-stroke: #6366f1;
+  --gate-text: #8b8ff8;
+  --reg-text: #7a7f94;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    min-height: 100vh;
+  }
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  button {
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button:active {
+    transform: scale(0.98);
+  }
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #2a2d3a;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
