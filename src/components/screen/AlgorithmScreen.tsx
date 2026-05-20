@@ -1,18 +1,17 @@
-import {
-  TabHadamard,
-  TabInit,
-  TabMain,
-  TabMeasureX,
-  TabMeasureY,
-  TabPost,
-  TabQFT,
-  TabUf,
-} from "@/components/tabs";
 import { EASTER_EGG_ENABLED, useEasterEgg } from "@/hooks/useEasterEgg";
 import { FactorResult } from "@/lib/quantum/contiunedFractions";
 import runShor from "@/lib/quantum/main";
 import { StageMap } from "@/types";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
+
+const TabMain = lazy(() => import("@/components/tabs/TabMain"));
+const TabInit = lazy(() => import("@/components/tabs/TabInit"));
+const TabHadamard = lazy(() => import("@/components/tabs/TabHadamard"));
+const TabUf = lazy(() => import("@/components/tabs/TabUf"));
+const TabMeasureY = lazy(() => import("@/components/tabs/TabMeasureY"));
+const TabQFT = lazy(() => import("@/components/tabs/TabQFT"));
+const TabMeasureX = lazy(() => import("@/components/tabs/TabMeasureX"));
+const TabPost = lazy(() => import("@/components/tabs/TabPost"));
 
 interface AlgorithmWindowProps {
   M: number;
@@ -239,16 +238,24 @@ export default function AlgorithmWindow({ M, onReset }: AlgorithmWindowProps) {
 
         {/* Tab content */}
         <div className="flex-1 overflow-y-auto p-6">
-          {activeTab === "main" && (
-            <TabMain state={state} M={M} steps={steps} running={running} />
-          )}
-          {activeTab === "init" && <TabInit state={state} />}
-          {activeTab === "hadamard" && <TabHadamard state={state} />}
-          {activeTab === "uf" && <TabUf state={state} M={M} />}
-          {activeTab === "measureY" && <TabMeasureY state={state} />}
-          {activeTab === "qft" && <TabQFT state={state} />}
-          {activeTab === "measureX" && <TabMeasureX state={state} />}
-          {activeTab === "post" && <TabPost state={state} M={M} />}
+          <Suspense
+            fallback={
+              <div className="text-sm text-gray-500 dark:text-[#7a7f94]">
+                Загрузка вкладки…
+              </div>
+            }
+          >
+            {activeTab === "main" && (
+              <TabMain state={state} M={M} steps={steps} running={running} />
+            )}
+            {activeTab === "init" && <TabInit state={state} />}
+            {activeTab === "hadamard" && <TabHadamard state={state} />}
+            {activeTab === "uf" && <TabUf state={state} M={M} />}
+            {activeTab === "measureY" && <TabMeasureY state={state} />}
+            {activeTab === "qft" && <TabQFT state={state} />}
+            {activeTab === "measureX" && <TabMeasureX state={state} />}
+            {activeTab === "post" && <TabPost state={state} M={M} />}
+          </Suspense>
         </div>
       </div>
     </div>

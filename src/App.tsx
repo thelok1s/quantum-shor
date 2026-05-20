@@ -1,6 +1,4 @@
-import AlgorithmScreen from "@/components/screen/AlgorithmScreen";
 import StartScreen from "@/components/screen/StartScreen";
-import AboutModal from "@/components/ui/AboutModal";
 import AppLogo from "@/components/ui/AppLogo";
 import { ThemeContext } from "@/lib/ThemeContext";
 import {
@@ -8,7 +6,12 @@ import {
   IconMoonFilled,
   IconSunHigh,
 } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
+
+const AlgorithmScreen = lazy(
+  () => import("@/components/screen/AlgorithmScreen"),
+);
+const AboutModal = lazy(() => import("@/components/ui/AboutModal"));
 
 const getInitialTheme = () => {
   const stored = localStorage.getItem("theme");
@@ -87,11 +90,23 @@ export default function App() {
           {screen === "start" ? (
             <StartScreen onFactorize={handleFactorize} />
           ) : (
-            <AlgorithmScreen M={moduleM!} onReset={handleReset} />
+            <Suspense
+              fallback={
+                <div className="flex-1 flex items-center justify-center text-sm text-gray-500 dark:text-[#7a7f94]">
+                  Загрузка симуляции…
+                </div>
+              }
+            >
+              <AlgorithmScreen M={moduleM!} onReset={handleReset} />
+            </Suspense>
           )}
         </main>
 
-        {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
+        {showAbout && (
+          <Suspense fallback={null}>
+            <AboutModal onClose={() => setShowAbout(false)} />
+          </Suspense>
+        )}
       </div>
     </ThemeContext.Provider>
   );
